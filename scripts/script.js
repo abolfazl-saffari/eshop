@@ -1,6 +1,6 @@
 const $ = document;
-let data = [];
 const mainElem = $.querySelector("main");
+let data = [];
 
 async function getAllProducts() {
   const response = await fetch("https://dummyjson.com/products");

@@ -1,0 +1,13 @@
+.card {
+  width: 18rem;
+}
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+main img {
+  aspect-ratio: 3/2;
+  object-fit: contain;
+  border-bottom: 1px solid rgb(223, 221, 221);
+}

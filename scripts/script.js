@@ -1,6 +1,7 @@
 const $ = document;
 const mainElem = $.querySelector("main");
 const cartElem = $.querySelector(".cart-tooltip");
+const cartItemsCounter = $.querySelector(".cart-items-counter");
 let cart = [];
 let data = [];
 
@@ -31,8 +32,22 @@ function productsGenerator(products) {
         />
         <div class="card-body">
             <h6 class="card-title title m-0">${product.title}</h6>
-
-            <button onclick="addToCart(${product.id})" class="btn btn-primary mt-4">Add to cart</button>
+            ${
+              !checkCartBtn(product.id)
+                ? `
+                <button onclick="addToCart(${product.id})" class="btn btn-primary mt-4">Add to cart</button>
+                `
+                : `
+            <div class='mt-4'>
+              <button onclick="decreaseBtn(${
+                product.id
+              })" class='addBtn btn btn-primary'>-</button>
+              <p class='d-inline px-1'>${cartItemCounter(product.id)}</p>
+              <button onclick="increaseBtn(${
+                product.id
+              })" class='addBtn btn btn-primary'>+</button>
+            </div>`
+            }
         </div>
     </div>`;
     allCards += card;
@@ -57,13 +72,19 @@ function cartGenerator(products) {
         <div class="ms-3">
           <p class="item-title m-0 text-dark">${product.title}</p>
           <div>
-            <button class="rounded">-</button>
-            <p class="d-inline text-dark">1</p>
-            <button class="rounded">+</button>
+            <button onclick="decreaseBtn(${
+              product.id
+            })" class="rounded">-</button>
+            <p class="d-inline text-dark">${cartItemCounter(product.id)}</p>
+            <button onclick="increaseBtn(${
+              product.id
+            })" class="rounded">+</button>
           </div>
         </div>
       </div>
-      <i class="bi bi-trash text-danger"></i>
+      <i onclick="removeItemCart(${
+        product.id
+      })" class="bi bi-trash text-danger"></i>
     </div>`;
     allCards += card;
   });
@@ -72,11 +93,61 @@ function cartGenerator(products) {
 
 function addToCart(productID) {
   let product = data.find((product) => product.id === productID);
-  cart.push(product);
+  cart.push({ ...product, itemCount: 1 });
   cartGenerator(cart);
+  totalCartItemCounter();
+  productsGenerator(data);
 }
-// <div class='mt-4'>
-// <button class='addBtn btn btn-primary'>-</button>
-// <p class='d-inline px-1'>1</p>
-// <button class='addBtn btn btn-primary'>+</button>
-// </div>
+
+function checkCartBtn(productID) {
+  if (
+    cart.find((product) => product.id === productID && product.itemCount > 0)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function decreaseBtn(productID) {
+  let filteredCart = [...cart]
+    .filter((product) =>
+      product.id === productID
+        ? { ...product, itemCount: product.itemCount-- }
+        : product
+    )
+    .filter((product) => product.itemCount > 0);
+  cart = [...filteredCart];
+  totalCartItemCounter();
+  productsGenerator(data);
+}
+
+function increaseBtn(productID) {
+  let filteredCart = [...cart].filter((product) =>
+    product.id === productID
+      ? { ...product, itemCount: product.itemCount++ }
+      : product
+  );
+  cart = [...filteredCart];
+  totalCartItemCounter();
+  productsGenerator(data);
+}
+
+function cartItemCounter(productID) {
+  let productFinder = [...cart].find((product) => product.id === productID);
+  return productFinder.itemCount;
+}
+
+function totalCartItemCounter() {
+  let total = [...cart]
+    .map((product) => product.itemCount)
+    .reduce((a, b) => a + b, 0);
+  cartItemsCounter.innerHTML = total;
+}
+
+function removeItemCart(productID) {
+  let filteredCart = [...cart].filter((product) => product.id !== productID);
+  cart = [...filteredCart];
+  cartGenerator(cart);
+  totalCartItemCounter();
+  productsGenerator(data);
+}

@@ -16,6 +16,7 @@ getAllProducts()
   .then((products) => {
     data = [...products.products];
     productsGenerator(data);
+    console.log(data);
   })
   .catch((error) => console.log(error));
 
@@ -35,18 +36,24 @@ function productsGenerator(products) {
             ${
               !checkCartBtn(product.id)
                 ? `
-                <button onclick="addToCart(${product.id})" class="btn btn-primary mt-4">Add to cart</button>
+                <div class='d-flex justify-content-between align-items-center mt-4'>
+                <p class='m-0'>${product.price}$</p>
+                  <button onclick="addToCart(${product.id})" class="btn btn-primary">Add to cart</button>
+                </div>
                 `
                 : `
-            <div class='mt-4'>
-              <button onclick="decreaseBtn(${
-                product.id
-              })" class='addBtn btn btn-primary'>-</button>
-              <p class='d-inline px-1'>${cartItemCounter(product.id)}</p>
-              <button onclick="increaseBtn(${
-                product.id
-              })" class='addBtn btn btn-primary'>+</button>
-            </div>`
+                <div class='d-flex justify-content-between align-items-center mt-4'>
+                  <p class='m-0'>${product.price}$</p>
+                  <div>
+                    <button onclick="decreaseBtn(${
+                      product.id
+                    })" class='addBtn btn btn-primary'>-</button>
+                    <p class='d-inline px-1'>${cartItemCounter(product.id)}</p>
+                    <button onclick="increaseBtn(${
+                      product.id
+                    })" class='addBtn btn btn-primary'>+</button>
+                  </div>
+              </div>`
             }
         </div>
     </div>`;
@@ -71,14 +78,17 @@ function cartGenerator(products) {
         </div>
         <div class="ms-3">
           <p class="item-title m-0 text-dark">${product.title}</p>
-          <div>
-            <button onclick="decreaseBtn(${
-              product.id
-            })" class="rounded">-</button>
-            <p class="d-inline text-dark">${cartItemCounter(product.id)}</p>
-            <button onclick="increaseBtn(${
-              product.id
-            })" class="rounded">+</button>
+          <div class='d-flex justify-content-between align-items-center'>
+            <p class='item-price text-dark m-0'>${product.price}$</p>
+            <div>
+              <button onclick="decreaseBtn(${
+                product.id
+              })" class="rounded">-</button>
+              <p class="d-inline text-dark">${cartItemCounter(product.id)}</p>
+              <button onclick="increaseBtn(${
+                product.id
+              })" class="rounded">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -88,6 +98,14 @@ function cartGenerator(products) {
     </div>`;
     allCards += card;
   });
+  if (cart.length) {
+    allCards += `
+    <div class="d-flex justify-content-between p-2">
+      <span class="text-dark">total :</span>
+      <span class="totalPrice text-dark">${totalCartPriceCounter()}</span>
+    </div>
+  `;
+  }
   cartElem.innerHTML += allCards;
 }
 
@@ -142,6 +160,14 @@ function totalCartItemCounter() {
     .map((product) => product.itemCount)
     .reduce((a, b) => a + b, 0);
   cartItemsCounter.innerHTML = total;
+}
+
+function totalCartPriceCounter() {
+  let total = [...cart]
+    .map((product) => product.price * product.itemCount)
+    .reduce((a, b) => a + b, 0);
+
+  return `${total}$`;
 }
 
 function removeItemCart(productID) {

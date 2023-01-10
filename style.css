@@ -72,3 +72,7 @@ main img {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.item .item-price {
+  font-size: 0.7rem;
+}

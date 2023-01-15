@@ -6,7 +6,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-main img {
+
+.card-img-top {
   aspect-ratio: 3/2;
   object-fit: contain;
   border-bottom: 1px solid rgb(223, 221, 221);
@@ -75,4 +76,19 @@ main img {
 
 .item .item-price {
   font-size: 0.7rem;
+}
+
+.product-img {
+  width: 550px;
+  height: 500px;
+  aspect-ratio: 3/2;
+  object-fit: contain;
+}
+
+.product-detail-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

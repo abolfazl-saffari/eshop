@@ -25,14 +25,16 @@ function productsGenerator(products) {
   let allCards = "";
   products.forEach((product) => {
     const card = `
-    <div class="card" >
+    <div class="shadow card" >
         <img
         src='${product.images[0]}'
         alt='${product.title}'
         class="card-img-top"
         />
         <div class="card-body">
-            <h6 class="card-title title m-0">${product.title}</h6>
+            <h6 class="card-title title m-0"><a class='text-decoration-none text-dark' href='singlePage.html?productId=${
+              product.id
+            }'>${product.title}</a></h6>
             ${
               !checkCartBtn(product.id)
                 ? `
@@ -177,3 +179,5 @@ function removeItemCart(productID) {
   totalCartItemCounter();
   productsGenerator(data);
 }
+
+function singleProduct() {}
